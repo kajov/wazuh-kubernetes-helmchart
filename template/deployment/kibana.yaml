@@ -1,12 +1,4 @@
-# Copyright (C) 2021 Wazuh Inc.
-#
-# This program is a free software; you can redistribute it
-# and/or modify it under the terms of the GNU General Public
-# License (version 2) as published by the FSF - Free Software
-# Foundation.
-
-# Kibana Deployment
-
+{{- if .Values.kibana.deployment.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -30,14 +22,9 @@ spec:
             secretName: kibana-certs
       containers:
         - name: wazuh-kibana
-          image: "wazuh/wazuh-kibana-odfe:4.0.4_1.11.0"
+          image: "{{ .Values.kibana.images.repository }}: {{ .Values.kibana.images.tag }}"
           resources:
-            requests:
-              cpu: 200m
-              memory: 512Mi
-            limits:
-              cpu: 400m
-              memory: 2Gi
+{{ toYaml .Values.kibana.images.resources | indent 12 }}
           volumeMounts:
             - name: kibana-certs
               mountPath: /usr/share/kibana/config/cert.pem
@@ -48,7 +35,7 @@ spec:
               readOnly: true
               subPath: key.pem
           ports:
-            - containerPort: 5601
+            - containerPort: {{ .Values.}}
               name: kibana
           env:
             - name: ELASTICSEARCH_URL
@@ -81,3 +68,4 @@ spec:
                 secretKeyRef:
                   name: wazuh-api-cred
                   key: password
+{{- end -}}

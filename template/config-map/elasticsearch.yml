@@ -1,28 +1,88 @@
-cluster.name: ${CLUSTER_NAME}
-node.name: ${NODE_NAME}
-network.host: ${NETWORK_HOST}
-discovery.seed_hosts: wazuh-elasticsearch-0.wazuh-elasticsearch
-cluster.initial_master_nodes:
-  - wazuh-elasticsearch-0
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: elastic-odfe-config
+data:
+  config.yml: |-
+    cluster.name: ${CLUSTER_NAME}
+    node.name: ${NODE_NAME}
+    network.host: ${NETWORK_HOST}
+    discovery.seed_hosts: wazuh-elasticsearch-0.wazuh-elasticsearch
+    cluster.initial_master_nodes:
+      - wazuh-elasticsearch-0
 
-opendistro_security.ssl.transport.enabled: true
-opendistro_security.ssl.transport.pemcert_filepath: node.pem
-opendistro_security.ssl.transport.pemkey_filepath: node-key.pem
-opendistro_security.ssl.transport.pemtrustedcas_filepath: root-ca.pem
-opendistro_security.ssl.transport.enforce_hostname_verification: false
-opendistro_security.ssl.http.enabled: true
-opendistro_security.ssl.http.pemcert_filepath: node.pem
-opendistro_security.ssl.http.pemkey_filepath: node-key.pem
-opendistro_security.ssl.http.pemtrustedcas_filepath: root-ca.pem
-opendistro_security.audit.type: internal_elasticsearch
-opendistro_security.audit.config.index: "'security-auditlog-'YYYY.MM"
-opendistro_security.allow_default_init_securityindex: true
-opendistro_security.authcz.admin_dn:
-  - CN=admin,O=Company,L=California,C=US
-opendistro_security.nodes_dn:
-  - CN=*.elasticsearch,O=Company,L=California,C=US
-opendistro_security.enable_snapshot_restore_privilege: true
-opendistro_security.check_snapshot_restore_write_privileges: true
-opendistro_security.restapi.roles_enabled: ["all_access", "security_rest_api_access", "service_full_access"]
+    opendistro_security.ssl.transport.enabled: true
+    opendistro_security.ssl.transport.pemcert_filepath: node.pem
+    opendistro_security.ssl.transport.pemkey_filepath: node-key.pem
+    opendistro_security.ssl.transport.pemtrustedcas_filepath: root-ca.pem
+    opendistro_security.ssl.transport.enforce_hostname_verification: false
+    opendistro_security.ssl.http.enabled: true
+    opendistro_security.ssl.http.pemcert_filepath: node.pem
+    opendistro_security.ssl.http.pemkey_filepath: node-key.pem
+    opendistro_security.ssl.http.pemtrustedcas_filepath: root-ca.pem
+    opendistro_security.audit.type: internal_elasticsearch
+    opendistro_security.audit.config.index: "'security-auditlog-'YYYY.MM"
+    opendistro_security.allow_default_init_securityindex: true
+    opendistro_security.authcz.admin_dn:
+      - CN=admin,O=Company,L=California,C=US
+    opendistro_security.nodes_dn:
+      - CN=*.elasticsearch,O=Company,L=California,C=US
+    opendistro_security.enable_snapshot_restore_privilege: true
+    opendistro_security.check_snapshot_restore_write_privileges: true
+    opendistro_security.restapi.roles_enabled: ["all_access", "security_rest_api_access", "service_full_access"]
 
-cluster.routing.allocation.disk.threshold_enabled: false
+    cluster.routing.allocation.disk.threshold_enabled: false
+
+  internal_users.yml: |-
+    _meta:
+      type: "internalusers"
+      config_version: 2
+
+    # Define your internal users here
+
+    ## Demo users
+
+    admin:
+      hash: {{ .Values.elasticsearch.internal_users.admin | quote }}
+      reserved: true
+      backend_roles:
+        - "admin"
+      description: "Demo admin user"
+
+    kibanaserver:
+      hash: {{ .Values.elasticsearch.internal_users.kibanaserver | quote }}
+      reserved: true
+      description: "Demo kibanaserver user"
+
+    kibanaro:
+      hash: {{ .Values.elasticsearch.internal_users.kibanaro | quote }}
+      reserved: false
+      backend_roles:
+        - "kibanauser"
+        - "readall"
+      attributes:
+        attribute1: "value1"
+        attribute2: "value2"
+        attribute3: "value3"
+      description: "Demo kibanaro user"
+
+    logstash:
+      hash: {{ .Values.elasticsearch.internal_users.logstash | quote }}
+      reserved: false
+      backend_roles:
+        - "logstash"
+      description: "Demo logstash user"
+
+    readall:
+      hash: {{ .Values.elasticsearch.internal_users.readall | quote }}
+      reserved: false
+      backend_roles:
+        - "readall"
+      description: "Demo readall user"
+
+    snapshotrestore:
+      hash: {{ .Values.elasticsearch.internal_users.snapshotrestore | quote }}
+      reserved: false
+      backend_roles:
+        - "snapshotrestore"
+      description: "Demo snapshotrestore user"

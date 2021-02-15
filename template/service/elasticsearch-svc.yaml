@@ -1,0 +1,19 @@
+{{-if .Values.deployment.enabled }}
+# Elasticsearch service: Communications
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: wazuh-elasticsearch
+  namespace: wazuh
+  labels:
+    app: wazuh-elasticsearch
+spec:
+  selector:
+    app: wazuh-elasticsearch
+  ports:
+    - name: es-nodes
+      port: { { .Values.elasticsearch.service.httpPort . } }
+      targetPort: 9300
+  clusterIP: None
+{{- end -}}

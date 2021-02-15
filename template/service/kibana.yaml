@@ -1,11 +1,4 @@
-# Copyright (C) 2021 Wazuh Inc.
-#
-# This program is a free software; you can redistribute it
-# and/or modify it under the terms of the GNU General Public
-# License (version 2) as published by the FSF - Free Software
-# Foundation.
-
-# Kibana service
+{{-if .Values.kibana.deployment.enabled }}
 
 apiVersion: v1
 kind: Service
@@ -16,15 +9,20 @@ metadata:
     app: wazuh-kibana
     # dns: route53
   annotations:
+{{-if .Values.aws.elb.enabled and if .Values.aws.kibana.enabled }}
+{{-if .Values.aws.ELB_CERT.enabled }}
     # domainName: 'changeme'
     # service.beta.kubernetes.io/aws-load-balancer-ssl-cert: 'changeme'
-    # service.beta.kubernetes.io/aws-load-balancer-ssl-ports: '443'
-    # service.beta.kubernetes.io/aws-load-balancer-backend-protocol: https
+{{- end -}}
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: '{{ .Values.kibana.service.awsLbSslPort }}'
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: {{ .Values.kibana.awsLbBackEnd }}
+{{- end -}}
 spec:
-  type: ClusterIP
+  type: {{ .Values.kibana.service.type }}
   selector:
     app: wazuh-kibana
   ports:
     - name: kibana
-      port: 443
+      port: {{ .Values.kibana.service.httpPort }}
       targetPort: 5601
+{{- end -}}
