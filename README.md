@@ -1,1 +1,1 @@
-wazuh-kubernetes-helmchart
+TO BE FILLED IN AT SOME POINT
