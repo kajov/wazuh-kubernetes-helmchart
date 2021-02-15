@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: rolebinding-wazuh-agent
+  namespace: wazuh
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: role-wazuh-agent
+subjects:
+  - kind: ServiceAccount
+    name: wazuh-agent
+    namespace: wazuh

@@ -1,0 +1,58 @@
+# Elasticsearch statefulset deployment
+elasticsearch:
+  
+  deployment:
+    enabled: true
+    
+  selfcert:
+    enabled: false
+    
+  elkversion: "7.9.1"
+  
+  elasticsearch:
+    discoveryOverride: ""
+
+  service:
+    httpPort: 9200
+    transport: 9300
+    metrics: 9600
+    
+  images: 
+    repository: amazon/opendistro-for-elasticsearch
+    tag: "1.11.0"
+    pullPolicy: IfNotPresent
+    # If you're using private registry add secret name for docker credentials
+    # pullSecret: 
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 800m
+        memory: 2Gi
+    
+  serviceType: ClusterIP
+  
+  config:
+  
+  env:
+    CLUSTER_NAME: "Opendistro-logs"
+    #NETWORK_HOST: "_eth0_"
+    NETWORK_HOST: "0.0.0.0"
+    HTTP_CORS_ENABLE: "false"
+    ALLOW_DEMOCERTIFICATES: "false"
+    # The minimum number of masters that will be able to form a quorum. This
+    # should be (#masters / 2) + 1. Default is 2.
+    NUMBER_OF_MASTERS: "3"
+    
+  plugins: []
+
+  internal_users:
+    admin: "$2y$12$K/SpwjtB.wOHJ/Nc6GVRDuc1h0rM1DfvziFRNPtk27P.c4yDr9njO"
+    kibanaserver: "$2a$12$4AcgAt3xwOWadA5s5blL6ev39OXDNhmOesEoo33eZtrq2N0YrU3H."
+    kibanaro: "$2a$12$JJSXNfTowz7Uu5ttXfeYpeYE0arACvcwlPBStB1F.MI7f0U9Z4DGC"
+    logstash: "$2a$12$u1ShR4l4uBS3Uv59Pa2y5.1uQuZBrZtmNfqB3iM/.jL0XoV9sghS2"
+    readall: "$2a$12$ae4ycwzwvLtZxwZ82RmiEunBbIPiAmGZduBAjKN0TXdwQFtCwARz2"
+    snapshotrestore: "$2y$12$DpwmetHKwgYnorbgdvORCenv4NAK8cPUg8AI6pxLCuWf/ALc0.v7W"
+
+    

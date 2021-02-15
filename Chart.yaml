@@ -1,0 +1,33 @@
+apiVersion: 1
+name: wazuh-kubernetes
+version: 1
+appVersion: 4.0.4_1.11.0
+description: Wazuh is centralized Security Information Event Management(SIEM) and Vulnerability inteligence and threat monitoring application
+home: https://wazuh.com
+icon: https://avatars.githubusercontent.com/u/13752566?s=200&v=4
+sources:
+  - https://github.com/wazuh/wazuh
+  - https://github.com/wazuh/wazuh-kubernetes
+  - https://github.com/wazuh/wazuh-kibana-app
+  - https://github.com/wazuh/wazuh-rulesets
+  - https://github.com/wazuh/wazuh-docker
+  - https://github.com/wazuh/wazuh-ansamble
+  - https://github.com/wazuh/wazuh-api
+engine: C
+tillerVersion: ">=2.8.0"
+maintainers:
+  - name: Karolis Jovaisas
+    email: kajovaisas9@gmail.com
+    github: kajov
+    slack: 
+keywords:
+  - security
+  - information
+  - threat
+  - management
+  - centralized
+  - kubernetes
+  - wazuh
+  - kibana
+  - opendistro
+  - elasticsearch
