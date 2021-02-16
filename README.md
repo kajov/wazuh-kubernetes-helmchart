@@ -9,7 +9,8 @@ Deploy a Wazuh cluster using Helm quickly to Kubernetes.
 
 ## Documentation
 
-The [instructions.md](instructions.md) file describes how to deploy Wazuh on Kubernetes.
+***TODO***
+
 ## File Structure
 ```bash
 ├── assets
