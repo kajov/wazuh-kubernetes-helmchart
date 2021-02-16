@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wazuh-agent-installer-config
+  namespace: qc-track
+data:
+  install.sh: |
+    #/bin/bash
+    
+    sudo -i
+    #fix env language
+    export LC_ALL="C"
+    
+    ##install dependencies
+    apt-get update && \
+    apt-get install curl apt-transport-https lsb-release python python-pip openssl -y &&\
+    pip install docker \
+    pip install kubernetes &&\
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* &&\
+    mkdir /scripts /config
+    
+    #Install OSQuery
+    apt-get update &&\
+    apt-get install -y wget gpgv apt-transport-https ca-certificates gnupg2 &&\
+    echo "deb [arch=amd64] https://pkg.osquery.io/deb deb main" | tee /etc/apt/sources.list.d/osquery.list &&\
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1484120AC4E9F8A1A577AEEE97A80C63C9D8B80B && \
+    apt-get update &&\
+    apt-get install -y osquery &&\
+    apt-get update
+    
+    #Install Wazuh agent
+    curl -so wazuh-agent.deb https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.0.4-1_amd64.deb && dpkg -i ./wazuh-agent.deb
+    
+    systemctl daemon-reload
+    systemctl enable wazuh-agent
+    systemctl start wazuh-agent
