@@ -3,7 +3,6 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: wazuh-manager-worker
-  namespace: wazuh
 spec:
   replicas: {{ .Values.wazuh.worker_replicas }}
   selector:
@@ -124,7 +123,6 @@ spec:
   volumeClaimTemplates:
     - metadata:
         name: wazuh-manager-worker
-        namespace: wazuh
       spec:
         accessModes:
           - ReadWriteOnce

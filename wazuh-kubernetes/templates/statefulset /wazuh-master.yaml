@@ -4,7 +4,6 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: wazuh-manager-master
-  namespace: wazuh
 spec:
   replicas: {{ .Values.wazuh.master_replicas }}
   selector:
@@ -138,7 +137,6 @@ spec:
   volumeClaimTemplates:
     - metadata:
         name: wazuh-manager-master
-        namespace: wazuh
       spec:
         accessModes:
           - ReadWriteOnce

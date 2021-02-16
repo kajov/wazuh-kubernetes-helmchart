@@ -3,7 +3,6 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: wazuh-agent
-  namespace: wazuh
 spec:
   selector:
     matchLabels:
