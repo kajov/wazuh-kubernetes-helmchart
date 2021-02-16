@@ -8,7 +8,7 @@
 ### Wazuh Agent Dockerfile image
 ![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/kajov/wazuh-agent-installer)
 ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/kajov/wazuh-agent-installer)
-![Docker Image Version (latest by date)](https://img.shields.io/docker/v/kajov/wazuh-agent-installer)
+[![Docker Image Version (latest semver)](https://img.shields.io/docker/v/kajov/wazuh-agent-installer)](https://hub.docker.com/repository/docker/kajov/wazuh-agent-installer)
 ![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/kajov/wazuh-agent-installer?sort=date)
 ![Docker Pulls](https://img.shields.io/docker/pulls/kajov/wazuh-agent-installer)
 
