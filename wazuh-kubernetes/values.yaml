@@ -1,4 +1,4 @@
-#AWS load balancer enabled for using ELB(AWS Elastic Load Balancer)
+#AWS load balancer configuration for using ELB(AWS Elastic Load Balancer)
 #Some resources require loadbalancer. Refer to Wazuh documentation for more information
 aws:
 
@@ -29,11 +29,19 @@ aws:
     wazuh_worker:
       enabled: true
     
+    # AWS DNS53 configuration, refer to AWS DNS53 documentation together with Wazuh Documentation how to set it up
     dns53:
       enabled: false
-      wazuhMasterDomain: foobar.com
+      wazuhMasterDomain: master-foobar.com
+      wazuhWorkerDomain: worker-foobar.com
+      kibanaDomain: kibana-foobar.com
+
+# Use provided demo certificates
+# for production please use dynamically signed certificates
+democerts:
+  enabled: true
       
-# Elasticsearch statefulset deployment
+# Elasticsearch statefulset deployment configuration
 elasticsearch:
   
   deployment:
@@ -163,10 +171,41 @@ wazuh:
     type: ClusterIP
     masterType: LoadBalancer
     workerType: LoadBalancer
-    nodeType: master
+    m_nodeType: master
+    w_nodeType: worker
     ports:
       registration: 1515
       api: 55000
       wazuhInternal: 1516
       agentEvents: 1514
-      
+
+# Wazuh Agent installed in Daemonset form
+# Currently still in PoC
+agent:
+
+  deployment:
+    enabled: false
+  
+  rbac:
+    create: true
+  
+  serviceAccount:
+    create: true
+    
+  image:
+    repository: kajov/wazuh-agent-installer
+    tag: "latest"
+    imagePullSecrets:
+      name: regrecd
+      enabled: false
+    resources:
+      requests:
+        cpu: 100m
+        memory: 250m
+      limit:
+        cpu: 200m
+        memory: 500m
+  
+  # Wazuh Manager URL or IP. Reffer to Wazuh documentation for agent installation procedure for more information
+  env:
+    W_MANAGER: foobar.com

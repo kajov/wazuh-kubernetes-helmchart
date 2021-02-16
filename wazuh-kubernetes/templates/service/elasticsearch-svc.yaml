@@ -1,6 +1,5 @@
-{{-if .Values.deployment.enabled }}
+{{-if .Values.elasticsearch.deployment.enabled -}}
 # Elasticsearch service: Communications
-
 apiVersion: v1
 kind: Service
 metadata:

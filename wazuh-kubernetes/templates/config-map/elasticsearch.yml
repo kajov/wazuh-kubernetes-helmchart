@@ -1,3 +1,4 @@
+{{-if .Values.elasticsearch.deployment.enabled -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -86,3 +87,4 @@ data:
       backend_roles:
         - "snapshotrestore"
       description: "Demo snapshotrestore user"
+{{- end -}}

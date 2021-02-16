@@ -1,3 +1,4 @@
+{{-if .Values.wazuh.deployment.enabled -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -364,3 +365,4 @@ data:
         <location>/var/log/dpkg.log</location>
       </localfile>
     </ossec_config>
+{{- end -}}

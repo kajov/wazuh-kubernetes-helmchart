@@ -1,12 +1,5 @@
-# Copyright (C) 2021 Wazuh Inc.
-#
-# This program is a free software; you can redistribute it
-# and/or modify it under the terms of the GNU General Public
-# License (version 2) as published by the FSF - Free Software
-# Foundation.
-
+{{-if .Values.wazuh.deployment.enabled -}}
 # Wazuh workers service: Agent reporting
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -14,16 +7,23 @@ metadata:
   namespace: wazuh
   labels:
     app: wazuh-manager
-    # dns: route53
+{{-if .Values.aws.elb.dns53.enabled -}}
+    dns: route53
+{{- end -}}
   annotations:
-    # domainName: 'wazuh-manager.some-domain.com'  # TODO: Change this for a Hosted Zone you configured in AWS Route 53
-    # service.beta.kubernetes.io/aws-load-balancer-internal: 0.0.0.0/0
+  {{-if .Values.aws.elb.enabled. and if .Values.aws.wazuh_worker.enabled -}}
+  {{-if .Values.aws.elb.dns53.enabled -}}
+    domainName: {{ .Values.aws.dns53.wazuhWorkerDomain | quote }}
+  {{- end -}}
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: {{ .Values.aws.elb.protocol }}
+  {{- end -}}
 spec:
   type: {{ .Values.wazuh.service.workerType }}
   selector:
     app: wazuh-manager
-    node-type: worker
+    node-type: {{ .Values.wazuh.service.w_nodeType }}
   ports:
     - name: agents-events
       port: {{ .Values.wazuh.service.ports.agentEvents }}
       targetPort: 1514
+{{- end -}}

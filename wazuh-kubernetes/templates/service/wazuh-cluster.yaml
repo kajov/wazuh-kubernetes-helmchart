@@ -1,12 +1,5 @@
-# Copyright (C) 2021 Wazuh Inc.
-#
-# This program is a free software; you can redistribute it
-# and/or modify it under the terms of the GNU General Public
-# License (version 2) as published by the FSF - Free Software
-# Foundation.
-
+{{-if .Values.wazuh.deployment.enabled -}}
 # Wazuh cluster Service: Manager nodes communication
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -22,3 +15,4 @@ spec:
       port: {{ .Values.wazuh_master.service.ports.wazuhInternal }}
       targetPort: 1516
   clusterIP: None
+{{- end -}}

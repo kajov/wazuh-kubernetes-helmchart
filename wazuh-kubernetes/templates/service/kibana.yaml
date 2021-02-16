@@ -13,7 +13,7 @@ metadata:
   annotations:
 {{-if .Values.aws.elb.enabled and if .Values.aws.kibana.enabled }}
 {{-if .Values.aws.elb.dns53.enabled -}}
-    domainName: {{ .Values.aws.elb.dns53.wazuhMasterDomain | quote }}
+    domainName: {{ .Values.aws.elb.dns53.kibanaDomain | quote }}
 {{- end -}}
 {{- if .Values.aws.elb.cert.enabled -}}
     service.beta.kubernetes.io/aws-load-balancer-ssl-cert: {{ .Values.aws.elb.cert.certName | quote }}

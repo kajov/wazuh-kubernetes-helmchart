@@ -1,12 +1,5 @@
-# Copyright (C) 2021 Wazuh Inc.
-#
-# This program is a free software; you can redistribute it
-# and/or modify it under the terms of the GNU General Public
-# License (version 2) as published by the FSF - Free Software
-# Foundation.
-
+{{-if .Values.wazuh.deployment.enabled -}}
 # Wazuh master Service: API and registration (authd)
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -14,12 +7,12 @@ metadata:
   namespace: wazuh
   labels:
     app: wazuh-manager
-{{-if- .Values.aws.elb.dns53.enabled }}
+{{-if- .Values.aws.elb.dns53.enabled -}}
     dns: route53
 {{- end -}}
   annotations:
-{{-if Values.aws.elb.enabled and if .Values.aws.wazuh_master.enabled -}}
-    {{-if- .Values.aws.elb.dns53.enabled }}
+{{-if .Values.aws.elb.enabled and if .Values.aws.wazuh_master.enabled -}}
+    {{-if .Values.aws.elb.dns53.enabled -}}
     domainName: {{ .Values.aws.elb.dns53.wazuhMasterDomain | quote }}
     {{- end -}}
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: {{ .Values.aws.elb.protocol }}
@@ -36,3 +29,4 @@ spec:
     - name: api
       port: {{ .Values.wazuh.service.ports.api }}
       targetPort: 55000
+{{- end -}}
