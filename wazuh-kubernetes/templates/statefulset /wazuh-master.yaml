@@ -1,3 +1,4 @@
+{{- if .Values.wazuh_master.deployment.enabled }}
 # Wazuh master StatefulSet
 apiVersion: apps/v1
 kind: StatefulSet
@@ -117,7 +118,7 @@ spec:
                   name: elastic-cred
                   key: password
             - name: FILEBEAT_SSL_VERIFICATION_MODE
-              value: "none"
+              value: {{ .Values.wazuh_master.env.FILEBEAT_SSL_VERIFICATION_MODE | quote }}
             - name: SSL_CERTIFICATE_AUTHORITIES
               value: /etc/ssl/root-ca.pem
             - name: SSL_CERTIFICATE
@@ -150,3 +151,4 @@ spec:
         resources:
           requests:
             storage: 50Gi
+{{- end -}}

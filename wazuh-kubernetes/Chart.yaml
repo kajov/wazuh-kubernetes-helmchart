@@ -13,7 +13,7 @@ sources:
   - https://github.com/wazuh/wazuh-docker
   - https://github.com/wazuh/wazuh-ansamble
   - https://github.com/wazuh/wazuh-api
-engine: C
+engine: gotpl
 tillerVersion: ">=2.8.0"
 maintainers:
   - name: Karolis Jovaisas

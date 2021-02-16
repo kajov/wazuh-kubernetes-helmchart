@@ -1,5 +1,3 @@
-
-
 #AWS load balancer enabled for using ELB(AWS Elastic Load Balancer)
 aws:
 
@@ -118,3 +116,26 @@ kibana:
     type: ClusterIP
     awsLbSslPort: 443
     awsLbBackEnd: https
+
+  env:
+    ELASTICSEARCH_URL: https://wazuh-elasticsearch-0.wazuh-elasticsearch:9200
+    WAZUH_API_URL: https://wazuh-manager-master-0.wazuh-cluster
+    
+wazuh_master:
+
+  deployment:
+    enabled: true
+
+  images:
+    repository: wazuh/wazuh-odfe
+    tag: 4.0.4_1.11.0
+    resources:
+      requests:
+        cpu: 500m
+        memory: 500Mi
+      limits:
+        cpu: 850m
+        memory: 1Gi
+  
+  env:
+    FILEBEAT_SSL_VERIFICATION_MODE: none

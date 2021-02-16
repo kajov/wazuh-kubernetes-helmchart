@@ -39,7 +39,7 @@ spec:
               name: kibana
           env:
             - name: ELASTICSEARCH_URL
-              value: "https://wazuh-elasticsearch-0.wazuh-elasticsearch:9200"
+              value: {{ .Values.kibana.env.ELASTICSEARCH_URL | quoute }}
             - name: ELASTICSEARCH_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -51,13 +51,13 @@ spec:
                   name: elastic-cred
                   key: password
             - name: SERVER_SSL_ENABLED
-              value: "true"
+              value: {{ .Values.kibana.enable_ssl | quote }}
             - name: SERVER_SSL_CERTIFICATE
               value: /usr/share/kibana/config/cert.pem
             - name: SERVER_SSL_KEY
               value: /usr/share/kibana/config/key.pem
             - name: WAZUH_API_URL
-              value: https://wazuh-manager-master-0.wazuh-cluster
+              value: {{ .Values.kibana.env.WAZUH_API_URL | quote }}
             - name: API_USERNAME
               valueFrom:
                 secretKeyRef:
