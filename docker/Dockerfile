@@ -25,7 +25,7 @@ RUN curl -so wazuh-agent.deb https://packages.wazuh.com/4.x/apt/pool/main/w/wazu
 ADD scripts/manage_agent_key.py /scripts/manage_agent_key.py
 
 # Entrypoint
-ADD scripts/entrypoint.sh /entrypoint.sh
+ADD docker/scripts/entrypoint.sh /entrypoint.sh
 RUN chmod 755 /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
