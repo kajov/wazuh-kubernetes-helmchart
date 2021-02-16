@@ -19,11 +19,11 @@ metadata:
     # domainName: 'wazuh-manager.some-domain.com'  # TODO: Change this for a Hosted Zone you configured in AWS Route 53
     # service.beta.kubernetes.io/aws-load-balancer-internal: 0.0.0.0/0
 spec:
-  type: ClusterIP
+  type: {{ .Values.wazuh.service.workerType }}
   selector:
     app: wazuh-manager
     node-type: worker
   ports:
     - name: agents-events
-      port: 1514
+      port: {{ .Values.wazuh.service.ports.agentEvents }}
       targetPort: 1514

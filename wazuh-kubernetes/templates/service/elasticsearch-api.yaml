@@ -15,10 +15,10 @@ metadata:
   labels:
     app: wazuh-elasticsearch
 spec:
-  type: ClusterIP
+  type: {{ .Values.elasticsearch.service.type }}
   selector:
     app: wazuh-elasticsearch
   ports:
     - name: es-rest
-      port: 9200
+      port: {{ .Values.elasticsearch.service.httpPort }}
       targetPort: 9200

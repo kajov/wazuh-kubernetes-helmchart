@@ -19,6 +19,6 @@ spec:
     app: wazuh-manager
   ports:
     - name: cluster
-      port: 1516
+      port: {{ .Values.wazuh_master.service.ports.wazuhInternal }}
       targetPort: 1516
   clusterIP: None

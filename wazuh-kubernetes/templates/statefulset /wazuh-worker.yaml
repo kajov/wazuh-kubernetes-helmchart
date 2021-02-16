@@ -1,19 +1,11 @@
-# Copyright (C) 2021 Wazuh Inc.
-#
-# This program is a free software; you can redistribute it
-# and/or modify it under the terms of the GNU General Public
-# License (version 2) as published by the FSF - Free Software
-# Foundation.
-
-# Wazuh workers StatefulSet
-
+# Wazuh Worker StatefulSet
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: wazuh-manager-worker
   namespace: wazuh
 spec:
-  replicas: 2
+  replicas: {{ .Values.wazuh.worker_replicas }}
   selector:
     matchLabels:
       app: wazuh-manager
@@ -36,20 +28,15 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: wazuh-conf
+            name: worker-conf
         - name: filebeat-certs
           secret:
             secretName: odfe-ssl-certs
       containers:
         - name: wazuh-manager
-          image: "wazuh/wazuh-odfe:4.0.4_1.11.0"
+          image: "{{ .Values.wazuh.images.repository }}:{{ .Values.wazuh.images.tag }}"
           resources:
-            requests:
-              cpu: 1
-              memory: 1Gi
-            limits:
-              cpu: 2
-              memory: 2Gi
+{{ toYaml .Values.wazuh.images.worker_resources | indent 12 }}
           securityContext:
             capabilities:
               add: ["SYS_CHROOT"]
@@ -104,13 +91,13 @@ spec:
               mountPath: /var/lib/filebeat
               subPath: filebeat/var/lib/filebeat
           ports:
-            - containerPort: 1514
+            - containerPort: {{ .Values.wazuh.service.ports.agentEvents }}
               name: agents-events
-            - containerPort: 1516
+            - containerPort: {{ .Values.wazuh.service.ports.wazuhInternal }}
               name: cluster
           env:
             - name: ELASTICSEARCH_URL
-              value: "https://wazuh-elasticsearch-0.wazuh-elasticsearch:9200"
+              value: {{ .Values.kibana.env.ELASTICSEARCH_URL | quote }}
             - name: ELASTIC_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -122,7 +109,7 @@ spec:
                   name: elastic-cred
                   key: password
             - name: FILEBEAT_SSL_VERIFICATION_MODE
-              value: "none"
+              value: {{ .Values.wazuh.env.FILEBEAT_SSL_VERIFICATION_MODE | quote }}
             - name: SSL_CERTIFICATE_AUTHORITIES
               value: /etc/ssl/root-ca.pem
             - name: SSL_CERTIFICATE

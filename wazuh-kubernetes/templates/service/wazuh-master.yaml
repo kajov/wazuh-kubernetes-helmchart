@@ -14,19 +14,25 @@ metadata:
   namespace: wazuh
   labels:
     app: wazuh-manager
-    # dns: route53
+{{-if- .Values.aws.elb.dns53.enabled }}
+    dns: route53
+{{- end -}}
   annotations:
-    # domainName: 'changeme'
-    # service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+{{-if Values.aws.elb.enabled and if .Values.aws.wazuh_master.enabled -}}
+    {{-if- .Values.aws.elb.dns53.enabled }}
+    domainName: {{ .Values.aws.elb.dns53.wazuhMasterDomain | quote }}
+    {{- end -}}
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: {{ .Values.aws.elb.protocol }}
+  {{- end -}}
 spec:
-  type: ClusterIP
+  type: {{ .Values.wazuh.service.type }}
   selector:
     app: wazuh-manager
-    node-type: master
+    node-type: {{ .Values.wazuh.service.masterType }}
   ports:
     - name: registration
-      port: 1515
+      port: {{ .Values.wazuh.service.ports.registration }}
       targetPort: 1515
     - name: api
-      port: 55000
+      port: {{ .Values.wazuh.service.ports.api }}
       targetPort: 55000

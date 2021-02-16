@@ -38,10 +38,10 @@ spec:
           resources:
             requests:
               cpu: 50m
-              memory: 128Mi
+              memory: 64Mi
             limits:
               cpu: 100m
-              memory: 256Mi
+              memory: 128Mi
           command:
             - sh
             - "-c"
@@ -60,19 +60,20 @@ spec:
       containers:
         - name: wazuh-elasticsearch
           image: "{{ .Values.elasticsearch.images.repository}}:{{ .Values.elasticsearch.image.tag }}"
+          pullSecret: {{-if .Values.elasticsearch.images.pullSecret end-}}
           env:
             - name: ES_JAVA_OPTS
               value: "-Xms1g -Xmx1g"
             - name: CLUSTER_NAME
-              value: wazuh
+              value: {{ .Values.elasticsearch.env.CLUSTER_NAME }}
             - name: NETWORK_HOST
-              value: "0.0.0.0"
+              value: {{ .Valules.elasticsearch.env.NETWORK_HOST }}
             - name: NODE_NAME
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
             - name: DISCOVERY_SERVICE
-              value: wazuh-elasticsearch
+              value: {{ .Values.elasticsearch.env.DISCOVERY_SERVICE }}
             - name: KUBERNETES_NAMESPACE
               valueFrom:
                 fieldRef:

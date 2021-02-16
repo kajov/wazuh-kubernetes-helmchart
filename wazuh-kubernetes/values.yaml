@@ -1,29 +1,38 @@
 #AWS load balancer enabled for using ELB(AWS Elastic Load Balancer)
+#Some resources require loadbalancer. Refer to Wazuh documentation for more information
 aws:
 
   elb:
     enabled: true
+    protocol: tcp
     
     # Enabled custom certificates for AWS ELB
     cert:
       enabled: false
+      certName: demoCert
 
     # Enabled AWS ELB for Kibana Service
     kibana:
       enabled: false
+      port: 443
+      backEnd: https
 
     # AWS ELB for Elasticsearch Service
     elasticsearch:
       enabled: false
 
     # AWS ELB for Wazuh Master Service
-    wazuh-master:
+    wazuh_master:
       enabled: true
 
     # AWS LB for Wazuh worker Service
-    wazuh-worker:
+    wazuh_worker:
       enabled: true
-
+    
+    dns53:
+      enabled: false
+      wazuhMasterDomain: foobar.com
+      
 # Elasticsearch statefulset deployment
 elasticsearch:
   
@@ -50,7 +59,7 @@ elasticsearch:
     pullPolicy: IfNotPresent
     updateStrategy: RollingUpdate
     # If you're using private registry add secret name for docker credentials
-    # pullSecret: 
+    pullSecret: {}
     resources:
       requests:
         cpu: 500m
@@ -114,21 +123,23 @@ kibana:
   service:
     httpPort: 5601
     type: ClusterIP
-    awsLbSslPort: 443
-    awsLbBackEnd: https
 
   env:
     ELASTICSEARCH_URL: https://wazuh-elasticsearch-0.wazuh-elasticsearch:9200
     WAZUH_API_URL: https://wazuh-manager-master-0.wazuh-cluster
     
-wazuh_master:
+wazuh:
 
   deployment:
     enabled: true
 
+  master_replicas: 1
+  worker_replicas: 2
+  
   images:
     repository: wazuh/wazuh-odfe
-    tag: 4.0.4_1.11.0
+    tag: "4.0.4_1.11.0"
+    pullSecret: regcred
     resources:
       requests:
         cpu: 500m
@@ -136,6 +147,26 @@ wazuh_master:
       limits:
         cpu: 850m
         memory: 1Gi
+    worker_resources:
+      requests:
+        cpu: 1000m
+        memory: 1Gi
+      limits:
+        cpu: 1500m
+        memory: 2Gi
+  
   
   env:
     FILEBEAT_SSL_VERIFICATION_MODE: none
+
+  service:
+    type: ClusterIP
+    masterType: LoadBalancer
+    workerType: LoadBalancer
+    nodeType: master
+    ports:
+      registration: 1515
+      api: 55000
+      wazuhInternal: 1516
+      agentEvents: 1514
+      

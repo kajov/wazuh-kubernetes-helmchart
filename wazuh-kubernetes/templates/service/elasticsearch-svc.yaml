@@ -13,7 +13,7 @@ spec:
     app: wazuh-elasticsearch
   ports:
     - name: es-nodes
-      port: { { .Values.elasticsearch.service.httpPort . } }
+      port: {{ .Values.elasticsearch.service.httpPort }}
       targetPort: 9300
   clusterIP: None
 {{- end -}}
