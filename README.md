@@ -4,6 +4,11 @@
 [![Email](https://img.shields.io/badge/email-join-blue.svg)](https://groups.google.com/forum/#!forum/wazuh)
 [![Documentation](https://img.shields.io/badge/docs-view-green.svg)](https://documentation.wazuh.com)
 [![Documentation](https://img.shields.io/badge/web-view-green.svg)](https://wazuh.com)
+![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/kajov/wazuh-agent-installer)
+![Docker Image Version (latest by date)](https://img.shields.io/docker/v/kajov/wazuh-agent-installer)
+![Docker Pulls](https://img.shields.io/docker/pulls/kajov/wazuh-agent-installer)
+![Docker Pulls](https://img.shields.io/docker/pulls/kajov/wazuh-agent-installer)
+
 
 Deploy a Wazuh cluster using Helm quickly to Kubernetes.
 
