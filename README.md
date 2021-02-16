@@ -130,4 +130,4 @@ Copyright (C) 2016-2021 Wazuh Inc.  (License GPLv2)
 
 ## Credits and Thank you
 
-Based on the previous work from JPLachance [wazuh/wazuh-kubernetes](https://github.com/wazuh/wazuh-kubernetes) (2021/02/15)
+Based on the previous work from Wazuh team [wazuh/wazuh-kubernetes](https://github.com/wazuh/wazuh-kubernetes) (2021/02/15)
