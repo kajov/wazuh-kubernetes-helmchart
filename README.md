@@ -7,6 +7,10 @@
 
 Deploy a Wazuh cluster using Helm quickly to Kubernetes.
 
+## Author of the repo
+
+Karolis Jovaisas
+
 ## Documentation
 
 ***TODO***
