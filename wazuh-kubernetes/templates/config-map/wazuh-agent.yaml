@@ -6,7 +6,7 @@ metadata:
 data:
   ossec.conf: |-
     <!--
-      Wazuh - Agent - Default configuration for ubuntu 20.04
+      Wazuh - Agent - Default configuration for ubuntu 16.04
       More info at: https://documentation.wazuh.com
       Mailing list: https://groups.google.com/forum/#!forum/wazuh
     -->
