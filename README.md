@@ -5,15 +5,6 @@
 [![Documentation](https://img.shields.io/badge/docs-view-green.svg)](https://documentation.wazuh.com)
 [![Documentation](https://img.shields.io/badge/web-view-green.svg)](https://wazuh.com)
 
-### Wazuh Agent Dockerfile image
-![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/kajov/wazuh-agent-installer)
-![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/kajov/wazuh-agent-installer)
-[![Docker Image Version (latest semver)](https://img.shields.io/docker/v/kajov/wazuh-agent-installer)](https://hub.docker.com/repository/docker/kajov/wazuh-agent-installer)
-![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/kajov/wazuh-agent-installer?sort=date)
-![Docker Pulls](https://img.shields.io/docker/pulls/kajov/wazuh-agent-installer)
-
-
-
 Deploy a Wazuh cluster using Helm quickly to Kubernetes.
 
 ## Documentation
@@ -90,7 +81,14 @@ The [instructions.md](instructions.md) file describes how to deploy Wazuh on Kub
 
 ## Local development
 
-To deploy a cluster on your local environment (like Minikube, Kind or Microk8s) read the instructions on [local-environment.md](local-environment.md).
+To deploy a cluster on your local environment (like Minikube, Kind or Microk8s) read the instructions on [local-environment.md](assets/documents/local-environment.md).
+
+### Wazuh Agent Dockerfile image
+![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/kajov/wazuh-agent-installer)
+![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/kajov/wazuh-agent-installer)
+[![Docker Image Version (latest semver)](https://img.shields.io/docker/v/kajov/wazuh-agent-installer)](https://hub.docker.com/repository/docker/kajov/wazuh-agent-installer)
+![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/kajov/wazuh-agent-installer?sort=date)
+![Docker Pulls](https://img.shields.io/docker/pulls/kajov/wazuh-agent-installer)
 
 ## Contribute
 
