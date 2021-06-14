@@ -1,36 +1,51 @@
-# Copyright (C) 2021 Wazuh Inc.
-#
-# This program is a free software; you can redistribute it
-# and/or modify it under the terms of the GNU General Public
-# License (version 2) as published by the FSF - Free Software
-# Foundation.
-
-# Elasticsearch StatefulSet: 3 master nodes.
-
+{{- if .Values.elasticsearch.deployment.enabled -}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: wazuh-elasticsearch
+  name: {{ include "wazuh.elasticsearch.fullname" . }}-elasticsearch
+  labels:
+{{ include "labels" $ | indent 4 }}
+    appComponent: Elasticsearch-StatefulSet
+    app: {{ include "wazuh.elasticsearch.fullname" . }}-elasticsearch
+  annotations:
+{{ include "annotations" $ | indent 4 }}
+    appComponent: Elasticsearch-StatefulSet
 spec:
-  replicas: 3
+  serviceName: {{ include "appIdentifier" .Values.identifier }}-elasticsearch
+  replicas: {{ .Values.elasticsearch.images.replicaCount }}
+  updateStrategy:
+    type: {{ .Values.elasticsearch.images.updateStrategy }}
   selector:
     matchLabels:
-      app: wazuh-elasticsearch
-  serviceName: wazuh-elasticsearch
+{{ include "labels" $ | indent 6 }}
+      app: {{ include "wazuh.elasticsearch.fullname" . }}-elasticsearch
+      role: master
+  serviceName: {{ include "appIdentifier" .Values.identifier }}-wazuh-elasticsearch
   template:
     metadata:
       labels:
-        app: wazuh-elasticsearch
-      name: wazuh-elasticsearch
+{{ include "labels" $ | indent 8 }}
+        appComponent: Elasticsearch-StatefulSet
+        app: {{ include "wazuh.elasticsearch.fullname" . }}-elasticsearch
+        role: master
+      annotations:
+{{ include "annotations" $ | indent 8 }}
+        appComponent: Elasticsearch-StatefulSet
+{{- if .Values.vault.enabled }}
+        vault.security.banzaicloud.io/vault-addr: {{ .Values.vault.security.vault_addr | quote }}
+        vault.security.banzaicloud.io/vault-role: {{ .Values.vault.security.vault_role | quote }}
+        vault.security.banzaicloud.io/vault-path: {{ .Values.vault.security.vault_path | quote }}
+        vault.security.banzaicloud.io/vault-skip-verify: {{ .Values.vault.security.vault_skip_verify | quote }}
+{{- end }}
     spec:
       # Set the wazuh-elasticsearch volume permissions so the elasticsearch user can use it
       volumes:
-        - name: odfe-ssl-certs
+        - name: odfe-ssl-certs 
           secret:
             secretName: odfe-ssl-certs
         - name: elastic-odfe-conf
           configMap:
-            name: elastic-odfe-conf
+            name: {{ template "wazuh.elasticsearch.fullname" . }}-config
       initContainers:
         - name: volume-mount-hack
           image: busybox
@@ -58,15 +73,14 @@ spec:
             privileged: true
       containers:
         - name: wazuh-elasticsearch
-          image: "{{ .Values.elasticsearch.images.repository}}:{{ .Values.elasticsearch.image.tag }}"
-          pullSecret: {{-if .Values.elasticsearch.images.pullSecret end-}}
+          image: "{{ .Values.elasticsearch.images.repository }}:{{ .Values.elasticsearch.images.tag }}"
           env:
             - name: ES_JAVA_OPTS
               value: "-Xms1g -Xmx1g"
             - name: CLUSTER_NAME
               value: {{ .Values.elasticsearch.env.CLUSTER_NAME }}
             - name: NETWORK_HOST
-              value: {{ .Valules.elasticsearch.env.NETWORK_HOST }}
+              value: {{ .Values.elasticsearch.env.NETWORK_HOST }}
             - name: NODE_NAME
               valueFrom:
                 fieldRef:
@@ -77,11 +91,8 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-          securityContext:
-            capabilities:
-              add: ["SYS_CHROOT"]
           resources:
-{{ toYaml .Values.images.resources | indent 12 }}
+{{ toYaml .Values.elasticsearch.images.resources | indent 12 }}
           volumeMounts:
             - name: wazuh-elasticsearch
               mountPath: /usr/share/elasticsearch/data
@@ -107,7 +118,7 @@ spec:
               readOnly: true
             - name: elastic-odfe-conf
               mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
-              subPath: elasticsearch.yml
+              subPath: config.yml
               readOnly: true
             - name: elastic-odfe-conf
               mountPath: /usr/share/elasticsearch/plugins/opendistro_security/securityconfig/internal_users.yml
@@ -128,3 +139,4 @@ spec:
         resources:
           requests:
             storage: 50Gi
+{{- end -}}

@@ -1,4 +1,4 @@
-{{-if .Values.wazuh.deployment.enabled -}}
+{{- if .Values.wazuh.deployment.enabled -}}
 # Wazuh cluster Service: Manager nodes communication
 apiVersion: v1
 kind: Service
@@ -11,7 +11,7 @@ spec:
     app: wazuh-manager
   ports:
     - name: cluster
-      port: {{ .Values.wazuh_master.service.ports.wazuhInternal }}
+      port: {{ .Values.wazuh.service.ports.wazuhInternal }}
       targetPort: 1516
   clusterIP: None
 {{- end -}}

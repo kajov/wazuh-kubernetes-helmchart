@@ -1,28 +1,39 @@
 {{- if .Values.wazuh.deployment.enabled }}
-# Wazuh master StatefulSet
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: wazuh-manager-master
+  name: wazuh-master
+  labels:
+{{ include "labels" $ | indent 4 }}
+    appComponent: Wazuh-Master-StatefulSet
+    node-type: master
+  annotations:
+{{ include "annotations" $ | indent 4 }}
+    appComponent: Wazuh-Master-StatefulSet
 spec:
   replicas: {{ .Values.wazuh.master_replicas }}
   selector:
     matchLabels:
-      app: wazuh-manager
+{{ include "labels" $ | indent 6 }}
+      appComponent: Wazuh-Master-StatefulSet
       node-type: master
+    annotations:
+{{ include "annotations" $ | indent 6 }}
+      appComponent: Elasticsearch-StatefulSet
   serviceName: wazuh-cluster
   podManagementPolicy: Parallel
   template:
     metadata:
       labels:
-        app: wazuh-manager
+{{ include "labels" $ | indent 8 }}
+        appComponent: Wazuh-Master-StatefulSet
         node-type: master
       name: wazuh-manager-master
     spec:
       volumes:
         - name: config
           configMap:
-            name: master-conf
+            name: {{ template "wazuh.fullname" . }}-master-config
         - name: filebeat-certs
           secret:
             secretName: odfe-ssl-certs

@@ -1,8 +1,14 @@
-{{-if .Values.agent.deployment.enabled -}}
+{{- if .Values.agent.deployment.enabled -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: ossec-conf
+  labels:
+{{ include "qlabels" $ | indent 4 }}
+    appComponent: Wazuh-Agent-ConfigMap
+  annotations:
+{{ include "annotations" $ | indent 4 }}
+    appComponents: Wazuh-Agent-ConfigMap
+  name: {{ template "wazuh.agent.fullname" . }}-config
 data:
   ossec.conf: |-
     <!--
@@ -109,7 +115,7 @@ data:
       <!-- Virustotal inegration -->
       <integration>
         <name>virustotal</name>
-        <api_key>8ceac89e084ad895ca583f7d1971cbd7326474ea2b2c8b0c7bb24961ef28fa46</api_key> <!-- Replace with your VirusTotal API key -->
+        <api_key>VIRUS_TOTAL_API_KEY</api_key> <!-- Replace with your VirusTotal API key -->
         <group>syscheck</group>
         <alert_format>json</alert_format>
       </integration>

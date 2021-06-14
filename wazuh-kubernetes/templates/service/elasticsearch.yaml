@@ -1,0 +1,20 @@
+{{- if .Values.elasticsearch.deployment.enabled -}}
+# Elasticsearch service: Communications
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "appIdentifier" .Values.identifier }}-elasticsearch
+  labels:
+{{ include "labels" $ | indent 4 }}
+    appComponent: Wazuh-Elasticsearch
+    app: {{ include "wazuh.fullname" . }}-elasticsearch
+  annotations:
+{{ include "annotations" $ | indent 4 }}
+    appComponent: Wazuh-Elasticsearch
+spec:
+  ports:
+    - name: es-nodes
+      port: {{ .Values.elasticsearch.service.httpPort }}
+      targetPort: 9300
+  clusterIP: None
+{{- end -}}

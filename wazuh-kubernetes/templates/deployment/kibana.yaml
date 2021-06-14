@@ -2,26 +2,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wazuh-kibana
+  name: {{ include "wazuh.kibana.fullname" . }}-dpl
+  labels:
+{{ include "labels" $ | indent 4 }}
+    appComponent: Kibana-Deployment
+  annotations:
+{{ include "annotations" $ | indent 4 }}
+    appComponent: Kibana-Deployment
 spec:
-  replicas: 1
+  replicas: {{ .Values.kibana.replicas }}
   selector:
     matchLabels:
-      app: wazuh-kibana
-  serviceName: kibana
+{{ include "labels" $ | indent 6 }}
+    role: kibana
+  serviceName: {{ include "appIdentifier" .Values.identifier }}-kibana-svc
   template:
     metadata:
       labels:
-        app: wazuh-kibana
-      name: wazuh-kibana
+{{ include "labels" $ | indent 8 }}
+        appComponent: Kibana-Pod
+        app: {{ include "appIdentifier" .Values.identifier }}-kibana-dpl
+      annotations:
+        appComponent: Kibana-Pod
+      name: {{ include "appIdentifier" .Values.identifier }}-kibana-dpl
     spec:
       volumes:
         - name: kibana-certs
           secret:
             secretName: kibana-certs
       containers:
-        - name: wazuh-kibana
-          image: "{{ .Values.kibana.images.repository }}: {{ .Values.kibana.images.tag }}"
+        - name: odfe-kibana-w-wazuh
+          image: "{{ .Values.kibana.images.repository }}:{{ .Values.kibana.images.tag }}"
           resources:
 {{ toYaml .Values.kibana.images.resources | indent 12 }}
           volumeMounts:
@@ -34,11 +45,11 @@ spec:
               readOnly: true
               subPath: key.pem
           ports:
-            - containerPort: {{ .Values.}}
+            - containerPort: {{ .Values.kibana.service.httpPort }}
               name: kibana
           env:
             - name: ELASTICSEARCH_URL
-              value: {{ .Values.kibana.env.ELASTICSEARCH_URL | quoute }}
+              value: {{ .Values.kibana.env.ELASTICSEARCH_URL | quote }}
             - name: ELASTICSEARCH_USERNAME
               valueFrom:
                 secretKeyRef:

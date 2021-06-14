@@ -1,4 +1,11 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: wazuh-agent
+  name: {{ include "wazuh.fullname" . }}-agent
+  labels:
+{{ include "labels" $ | indent 4 }}
+    appComponent: Agent-ServiceAccount
+    app: {{ include "wazuh.fullname" .}}-agent
+  annotations:
+{{ include "annotations" $ | indent 4 }}
+    appComponent: Agent-ServiceAccount

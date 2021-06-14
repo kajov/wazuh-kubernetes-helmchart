@@ -1,14 +1,22 @@
-{{-if .Values.agent.deployment.enabled and .Values.agent.rbac.create -}}
+{{- if .Values.agent.deployment.enabled -}}
+  {{- if .Values.agent.rbac.create -}}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: rolebinding-wazuh-agent
+  name: {{ include "appIdentifier" .Values.identifier }}
+  labels:
+{{ include "labels" $ | indent 4 }}
+    appComponent: ClusterRoleBinding
+  annotations:
+{{ include "annotations" $ | indent 4 }}
+    appComponent: ClusterRoleBinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: role-wazuh-agent
+  name: {{ include "appIdentifier" .Values.identifier }}
 subjects:
   - kind: ServiceAccount
-    name: wazuh-agent
-    namespace: wazuh
+    name: {{ include "appIdentifier" .Values.identifier }}
+    namespace: {{ .Release.Namespace | quote }}
+  {{- end -}}
 {{- end -}}

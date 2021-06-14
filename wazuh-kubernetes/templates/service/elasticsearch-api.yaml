@@ -1,15 +1,21 @@
-{{-if .Values.elasticsearch.deployment.enabled -}}
+{{- if .Values.elasticsearch.deployment.enabled -}}
 # Elasticsearch service: API
 apiVersion: v1
 kind: Service
 metadata:
-  name: elasticsearch
+  name: {{ include "appIdentifier" .Values.identifier }}-elasticsearch-api
   labels:
-    app: wazuh-elasticsearch
+{{ include "labels" $ | indent 4 }}
+    appComponent: Elasticsearch-svc
+    app: {{ include "wazuh.fullname" .}}-elasticsearch
+  annotations:
+{{ include "annotations" $ | indent 4 }}
+    appComponent: Elasticsearch-svc
 spec:
   type: {{ .Values.elasticsearch.service.type }}
   selector:
-    app: wazuh-elasticsearch
+{{ include "labels" $ | indent 4 }}
+    app: {{ include "wazuh.fullname" .}}-elasticsearch
   ports:
     - name: es-rest
       port: {{ .Values.elasticsearch.service.httpPort }}

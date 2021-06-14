@@ -1,4 +1,3 @@
-# Wazuh Worker StatefulSet
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -27,7 +26,7 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: worker-conf
+            name: {{ template "wazuh.fullname" . }}-worker-config
         - name: filebeat-certs
           secret:
             secretName: odfe-ssl-certs

@@ -1,13 +1,19 @@
-{{-if .Values.elasticsearch.deployment.enabled -}}
+{{- if .Values.elasticsearch.deployment.enabled -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: elastic-odfe-config
+  labels:
+{{ include "labels" $ | indent 4 }}
+    appComponent: Elasticsearch-ConfigMap
+  annotations:
+{{ include "annotations" $ | indent 4 }}
+    appComponent: Elasticsearch-ConfigMap
+  name: {{ template "wazuh.elasticsearch.fullname" . }}-config
 data:
   config.yml: |-
-    cluster.name: ${CLUSTER_NAME}
+    cluster.name: {{ .Values.elasticsearch.env.CLUSTER_NAME }}
     node.name: ${NODE_NAME}
-    network.host: ${NETWORK_HOST}
+    network.host: ${NETWORK_HOST:_local_}
     discovery.seed_hosts: wazuh-elasticsearch-0.wazuh-elasticsearch
     cluster.initial_master_nodes:
       - wazuh-elasticsearch-0

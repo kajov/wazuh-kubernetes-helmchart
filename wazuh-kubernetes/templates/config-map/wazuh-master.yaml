@@ -1,8 +1,14 @@
-{{-if .Values.wazuh.deployment.enabled -}}
+{{- if .Values.wazuh.deployment.enabled -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: master-config
+  labels:
+{{ include "labels" $ | indent 4 }}
+    appComponent: Wazuh-Master-ConfigMap
+  annotations:
+{{ include "annotations" $ | indent 4 }}
+    appComponent: Wazuh-Master-ConfigMap
+  name: {{ template "wazuh.fullname" . }}-master-config
 data:
   ossec.conf: |-
     <!--

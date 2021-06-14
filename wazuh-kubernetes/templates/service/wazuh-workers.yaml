@@ -1,4 +1,4 @@
-{{-if .Values.wazuh.deployment.enabled -}}
+{{- if .Values.wazuh.deployment.enabled }}
 # Wazuh workers service: Agent reporting
 apiVersion: v1
 kind: Service
@@ -6,16 +6,11 @@ metadata:
   name: wazuh-workers
   labels:
     app: wazuh-manager
-{{-if .Values.aws.elb.dns53.enabled -}}
-    dns: route53
-{{- end -}}
+{{ include "route53.dns.labels" $ | indent 4 }}
   annotations:
-  {{-if .Values.aws.elb.enabled. and if .Values.aws.wazuh_worker.enabled -}}
-  {{-if .Values.aws.elb.dns53.enabled -}}
-    domainName: {{ .Values.aws.dns53.wazuhWorkerDomain | quote }}
-  {{- end -}}
-    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: {{ .Values.aws.elb.protocol }}
-  {{- end -}}
+{{ include "annotations" $ | indent 4 }}
+    appComponent: wazuh-manager
+{{ include "aws.annotations" $ | indent 4 }}
 spec:
   type: {{ .Values.wazuh.service.workerType }}
   selector:

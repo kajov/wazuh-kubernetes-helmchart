@@ -1,21 +1,38 @@
-{{-if .Values.agent.deployment.enabled -}}
+{{- if .Values.agent.deployment.enabled -}}
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: wazuh-agent
+  name: {{ include "appIdentifier" .Values.identifier }}-agent-daemonset
+  labels:
+{{ include "labels" $ | indent 4 }}
+    appComponent: Wazuh-Agent-DaemonSet
+  annotations:
+{{ include "annotations" $ | indent 4 }}
+    appComponent: Wazuh-Agent-DaemonSet
 spec:
   selector:
     matchLabels:
-      name: wazuh-agent
+      name: {{ include "appIdentifier" .Values.identifier }}-agent-daemonset
+      labels:
+{{ include "labels" $ | indent 8 }}
+        appComponent: Wazuh-Agent-DaemonSet
+      annotations:
+{{ include "annotations" $ | indent 8 }}
+        appComponent: Wazuh-Agent-DaemonSet
   template:
     metadata:
       labels:
-        name: wazuh-agent
+        name: {{ include "appIdentifier" .Values.identifier }}-agent-daemonset
+{{ include "labels" $ | indent 8 }}
+        appComponent: Wazuh-Agent-DaemonSet
+      annotations:
+{{ include "annotations" $ | indent 8 }}
+        appComponent: Wazuh-Agent-DaemonSet
     spec:
       tolerations:
         - key: node-role.kubernetes.io/master
           effect: NoSchedule
-{{-if .Values.agent.image.imagePullSecrets.enabled -}}
+{{- if .Values.agent.image.imagePullSecrets.enabled -}}
       imagePullSecrets:
         - name: {{ .Values.agent.image.imagePullSecrets.name | quote }}
 {{- end -}}

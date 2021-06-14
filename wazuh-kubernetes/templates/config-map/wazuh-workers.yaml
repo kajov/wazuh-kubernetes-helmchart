@@ -1,8 +1,14 @@
-{{-if .Values.wazuh.deployment.enabled -}}
+{{- if .Values.wazuh.deployment.enabled -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: worker-config
+  labels:
+{{ include "labels" $ | indent 4 }}
+    appComponent: Wazuh-Worker-ConfigMap
+  annotations:
+{{ include "annotations" $ | indent 4 }}
+    appComponent: Wazuh-Worker-ConfigMap
+  name: {{ template "wazuh.fullname" . }}-worker-config
 data:
   ossec.conf: |-
     <!--
@@ -341,7 +347,7 @@ data:
         <port>1516</port>
         <bind_addr>0.0.0.0</bind_addr>
         <nodes>
-            <node>wazuh-manager-master-0.wazuh-cluster.qc-track</node>
+            <node>wazuh-manager-master-0.wazuh-cluster.track</node>
         </nodes>
         <hidden>no</hidden>
         <disabled>no</disabled>
