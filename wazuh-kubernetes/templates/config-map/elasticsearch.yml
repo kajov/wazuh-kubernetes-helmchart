@@ -14,9 +14,8 @@ data:
     cluster.name: {{ .Values.elasticsearch.env.CLUSTER_NAME }}
     node.name: ${NODE_NAME}
     network.host: ${NETWORK_HOST:_local_}
-    discovery.seed_hosts: wazuh-elasticsearch-0.wazuh-elasticsearch
     cluster.initial_master_nodes:
-      - wazuh-elasticsearch-0
+      - wazuh-m419ld912kghas2-elasticsearch-elasticsearch-0
 
     opendistro_security.ssl.transport.enabled: true
     opendistro_security.ssl.transport.pemcert_filepath: node.pem
@@ -31,9 +30,9 @@ data:
     opendistro_security.audit.config.index: "'security-auditlog-'YYYY.MM"
     opendistro_security.allow_default_init_securityindex: true
     opendistro_security.authcz.admin_dn:
-      - CN=admin,O=Company,L=California,C=US
+      - CN=admin,O=CompanyUS,L=California,C=US
     opendistro_security.nodes_dn:
-      - CN=*.elasticsearch,O=Company,L=California,C=US
+      - CN=*.elasticsearch,O=CompanyUS,L=California,C=US
     opendistro_security.enable_snapshot_restore_privilege: true
     opendistro_security.check_snapshot_restore_write_privileges: true
     opendistro_security.restapi.roles_enabled: ["all_access", "security_rest_api_access", "service_full_access"]
@@ -93,4 +92,22 @@ data:
       backend_roles:
         - "snapshotrestore"
       description: "Demo snapshotrestore user"
+
+    {{- if eq (.Values.elasticsearch.elkversion | substr 0 1) "7" }}
+
+    {{- $master_name := printf "- %s-%s" .Release.Name "master-dpl" }}
+
+    cluster.initial_master_nodes:
+    {{- range $ordinal, $e := untilStep 0 (.Values.elasticsearch.master.replicas | int) 1 }}
+    {{ $master_name }}-{{ $ordinal }}
+    {{- end }}
+
+    discovery.seed_hosts: ${DISCOVERY_SERVICE:}
+
+    {{ else }}
+    discovery.zen.ping.unicast.hosts: ${DISCOVERY_SERVICE:}
+    #(master/2)+1
+    discovery.zen.minimum_master_nodes: ${NUMBER_OF_MASTERS:1}
+    {{ end }}
+
 {{- end -}}

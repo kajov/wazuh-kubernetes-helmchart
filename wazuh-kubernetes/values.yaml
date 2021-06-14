@@ -61,7 +61,8 @@ elasticsearch:
     enabled: false
 
   elkversion: "7.9.1"
-
+  master:
+    replicas: 3
   elasticsearch:
     discoveryOverride: ""
 
@@ -149,7 +150,7 @@ kibana:
     type: ClusterIP
 
   env:
-    ELASTICSEARCH_URL: https://wazuh-elasticsearch-0.wazuh-elasticsearch:9200
+    ELASTICSEARCH_URL: http://wazuh-elasticsearch-0.wazuh-elasticsearch:9200
     WAZUH_API_URL: https://wazuh-manager-master-0.wazuh-cluster
 
 wazuh:
