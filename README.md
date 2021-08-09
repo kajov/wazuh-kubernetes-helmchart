@@ -11,10 +11,6 @@ Deploy a Wazuh cluster using Helm quickly to Kubernetes.
 
 Karolis Jovaisas
 
-## Documentation
-
-***TODO***
-
 ## File Structure
 ```bash
 ├── assets
@@ -32,7 +28,6 @@ Karolis Jovaisas
 │       └── wazuh-agent-install-cfm.yaml
 ├── LICENSE.md
 ├── README.md
-├── strucutre.txt
 └── wazuh-kubernetes
     ├── Chart.yaml
     ├── indentifier.yaml
@@ -80,13 +75,29 @@ Karolis Jovaisas
     │       └── wazuh-worker.yaml
     └── values.yaml
 ```
+
+## Documentation
+
+***TODO***
+
+
 ## Branches
 
-* `master` branch contains the latest code, be aware of possible bugs on this branch.
+* `master` contains latest code and is not considered to be `stable`.
+If you find any bugs feel free to create a PR.
+
+### Helm Version
+
+Currently the chart is written using Helm 2 (v2.16.12) refactoring to Helm3 hasn't been planned yet
+ but deffinetly might be happening in the future when Helm 2 will be retiring.
 
 ## Local development
+<!-- 
+To deploy a cluster on your local environment (like Minikube, Kind or Microk8s) read the instructions on [local-environment.md](assets/documents/local-environment.md). -->
 
-To deploy a cluster on your local environment (like Minikube, Kind or Microk8s) read the instructions on [local-environment.md](assets/documents/local-environment.md).
+To deploy a cluster on your local environment just navigate to `wazuh-kubernetes/scripts` and execute `test.sh` script to see if everything is linting correctly, afterwards you can deploy it quickly to your Kubernetes using script `deploy.sh`
+
+When you are done with the testing or work, you can use script named `remove.sh` to delete the deployment from your kubernetes environment.
 
 ### Wazuh Agent Dockerfile image
 ![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/kajov/wazuh-agent-installer)
