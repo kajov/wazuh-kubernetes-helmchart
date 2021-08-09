@@ -83,13 +83,13 @@ Karolis Jovaisas
 
 ## Branches
 
-* `master` contains latest code and is not considered to be `stable`.
+`master` contains latest code and is not considered to be `stable`.
 If you find any bugs feel free to create a PR.
 
 ### Helm Version
 
-Currently the chart is written using Helm 2 (v2.16.12) refactoring to Helm3 hasn't been planned yet
- but deffinetly might be happening in the future when Helm 2 will be retiring.
+Currently the chart is written using Helm 2 (__v2.16.12__) refactoring to Helm3 hasn't been planned yet
+ but deffinetly might be happening in the future.
 
 ## Local development
 <!-- 
